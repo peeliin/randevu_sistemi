@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+    var services = ViewBag.Services as List<store.Models.Service> ?? new List<store.Models.Service>();
+}
+
+<div class="hero-section">
+    <div class="container">
+        <h1 class="display-4 mb-3"><i class="bi bi-scissors"></i> Güzellik Merkezi</h1>
+        <p class="lead mb-4">Profesyonel güzellik ve bakım hizmetleri</p>
+        <a asp-controller="Appointment" asp-action="Create" class="btn btn-light btn-lg">
+            <i class="bi bi-calendar-plus"></i> Randevu Al
+        </a>
+        <a asp-controller="Admin" asp-action="Login" class="btn btn-outline-light btn-lg ms-2">
+            <i class="bi bi-shield-lock"></i> Admin Girişi
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12 text-center">
+            <h2 class="mb-4">Hizmetlerimiz</h2>
+            <p class="text-muted">Size en iyi hizmeti sunmak için buradayız</p>
+        </div>
+    </div>
+    
+    @if (services.Any())
+    {
+        <div class="row g-4 mb-5">
+            @foreach (var service in services)
+            {
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-star-fill text-warning"></i> @service.Name
+                            </h5>
+                            <p class="card-text text-muted">@(service.Description ?? "Profesyonel hizmet")</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="text-primary">@service.Price.ToString("C")</strong>
+                                    <small class="text-muted d-block">@service.Duration dakika</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle"></i> Henüz servis bulunmamaktadır.
+        </div>
+    }
+    
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="card bg-light">
+                <div class="card-body p-5">
+                    <h3 class="mb-3">Randevu Alın</h3>
+                    <p class="text-muted mb-4">Size uygun tarih ve saatte randevu almak için formu doldurun</p>
+                    <a asp-controller="Appointment" asp-action="Create" class="btn btn-primary btn-lg">
+                        <i class="bi bi-calendar-check"></i> Randevu Formu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

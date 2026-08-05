@@ -1,0 +1,96 @@
+@model store.Models.Customer
+@{
+    ViewData["Title"] = "Müşteri Detayı";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-eye"></i> Müşteri Detayı</h2>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+            <i class="bi bi-pencil"></i> Düzenle
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Geri Dön
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Müşteri Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Ad:</dt>
+                    <dd class="col-sm-8">@Model.FirstName</dd>
+                    
+                    <dt class="col-sm-4">Soyad:</dt>
+                    <dd class="col-sm-8">@Model.LastName</dd>
+                    
+                    <dt class="col-sm-4">Telefon:</dt>
+                    <dd class="col-sm-8">@Model.Phone</dd>
+                    
+                    <dt class="col-sm-4">E-posta:</dt>
+                    <dd class="col-sm-8">@(Model.Email ?? "Belirtilmemiş")</dd>
+                    
+                    <dt class="col-sm-4">Kayıt Tarihi:</dt>
+                    <dd class="col-sm-8">@Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</dd>
+                    
+                    @if (!string.IsNullOrEmpty(Model.Notes))
+                    {
+                        <dt class="col-sm-4">Notlar:</dt>
+                        <dd class="col-sm-8">@Model.Notes</dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Randevular (@(Model.Appointments?.Count ?? 0))</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Appointments != null && Model.Appointments.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Servis</th>
+                                    <th>Tarih</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var appointment in Model.Appointments.OrderByDescending(a => a.AppointmentDate))
+                                {
+                                    <tr>
+                                        <td>@appointment.Service?.Name</td>
+                                        <td>@appointment.AppointmentDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>
+                                            <span class="badge bg-@(appointment.Status == store.Models.AppointmentStatus.Pending ? "warning" : 
+                                                                    appointment.Status == store.Models.AppointmentStatus.Confirmed ? "info" : 
+                                                                    appointment.Status == store.Models.AppointmentStatus.Completed ? "success" : "danger")">
+                                                @appointment.Status
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">Henüz randevu bulunmamaktadır.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

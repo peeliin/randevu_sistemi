@@ -1,0 +1,121 @@
+@model store.Models.Appointment
+@{
+    ViewData["Title"] = "Randevu Detayı";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-eye"></i> Randevu Detayı</h2>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+            <i class="bi bi-pencil"></i> Düzenle
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Geri Dön
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Randevu Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Müşteri:</dt>
+                    <dd class="col-sm-8">@Model.Customer?.FullName</dd>
+                    
+                    <dt class="col-sm-4">Telefon:</dt>
+                    <dd class="col-sm-8">@Model.Customer?.Phone</dd>
+                    
+                    <dt class="col-sm-4">E-posta:</dt>
+                    <dd class="col-sm-8">@(Model.Customer?.Email ?? "Belirtilmemiş")</dd>
+                    
+                    <dt class="col-sm-4">Servis:</dt>
+                    <dd class="col-sm-8">@Model.Service?.Name</dd>
+                    
+                    <dt class="col-sm-4">Fiyat:</dt>
+                    <dd class="col-sm-8">@Model.Service?.Price.ToString("C")</dd>
+                    
+                    <dt class="col-sm-4">Süre:</dt>
+                    <dd class="col-sm-8">@Model.Service?.Duration dakika</dd>
+                    
+                    <dt class="col-sm-4">Personel:</dt>
+                    <dd class="col-sm-8">@(Model.Staff?.FullName ?? "Atanmadı")</dd>
+                    
+                    <dt class="col-sm-4">Randevu Tarihi:</dt>
+                    <dd class="col-sm-8">@Model.AppointmentDate.ToString("dd.MM.yyyy HH:mm")</dd>
+                    
+                    <dt class="col-sm-4">Durum:</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge bg-@(Model.Status == store.Models.AppointmentStatus.Pending ? "warning" : 
+                                                  Model.Status == store.Models.AppointmentStatus.Confirmed ? "info" : 
+                                                  Model.Status == store.Models.AppointmentStatus.Completed ? "success" : "danger")">
+                            @Model.Status
+                        </span>
+                    </dd>
+                    
+                    <dt class="col-sm-4">Oluşturulma Tarihi:</dt>
+                    <dd class="col-sm-8">@Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</dd>
+                    
+                    @if (!string.IsNullOrEmpty(Model.Notes))
+                    {
+                        <dt class="col-sm-4">Notlar:</dt>
+                        <dd class="col-sm-8">@Model.Notes</dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Hızlı İşlemler</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    @if (Model.Status != store.Models.AppointmentStatus.Confirmed)
+                    {
+                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <input type="hidden" name="status" value="@store.Models.AppointmentStatus.Confirmed" />
+                            <button type="submit" class="btn btn-info w-100">
+                                <i class="bi bi-check-circle"></i> Onayla
+                            </button>
+                        </form>
+                    }
+                    
+                    @if (Model.Status != store.Models.AppointmentStatus.Completed)
+                    {
+                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <input type="hidden" name="status" value="@store.Models.AppointmentStatus.Completed" />
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-check2-all"></i> Tamamlandı
+                            </button>
+                        </form>
+                    }
+                    
+                    @if (Model.Status != store.Models.AppointmentStatus.Cancelled)
+                    {
+                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <input type="hidden" name="status" value="@store.Models.AppointmentStatus.Cancelled" />
+                            <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Randevuyu iptal etmek istediğinize emin misiniz?')">
+                                <i class="bi bi-x-circle"></i> İptal Et
+                            </button>
+                        </form>
+                    }
+                    
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger w-100">
+                        <i class="bi bi-trash"></i> Sil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

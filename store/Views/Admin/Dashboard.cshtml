@@ -1,0 +1,118 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    var stats = ViewBag.Stats as dynamic;
+    var recentAppointments = ViewBag.RecentAppointments as List<store.Models.Appointment>;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Dashboard</h2>
+    <a asp-controller="Admin" asp-action="Logout" class="btn btn-outline-danger">Çıkış Yap</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Toplam Randevu</h5>
+                <h2>@stats.TotalAppointments</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Bekleyen Randevular</h5>
+                <h2>@stats.PendingAppointments</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Müşteriler</h5>
+                <h2>@stats.TotalCustomers</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Bugünkü Randevular</h5>
+                <h2>@stats.TodayAppointments</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>Hızlı Erişim</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-controller="AdminAppointments" asp-action="Create" class="btn btn-primary">Yeni Randevu</a>
+                    <a asp-controller="AdminServices" asp-action="Index" class="btn btn-outline-primary">Servisleri Yönet</a>
+                    <a asp-controller="AdminCustomers" asp-action="Index" class="btn btn-outline-primary">Müşterileri Yönet</a>
+                    <a asp-controller="AdminStaff" asp-action="Index" class="btn btn-outline-primary">Personeli Yönet</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>Son Randevular</h5>
+            </div>
+            <div class="card-body">
+                @if (recentAppointments != null && recentAppointments.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Müşteri</th>
+                                    <th>Servis</th>
+                                    <th>Tarih</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var appointment in recentAppointments)
+                                {
+                                    <tr>
+                                        <td>@appointment.Customer.FullName</td>
+                                        <td>@appointment.Service.Name</td>
+                                        <td>@appointment.AppointmentDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>
+                                            <span class="badge bg-@(appointment.Status == store.Models.AppointmentStatus.Pending ? "warning" : 
+                                                                    appointment.Status == store.Models.AppointmentStatus.Confirmed ? "info" : 
+                                                                    appointment.Status == store.Models.AppointmentStatus.Completed ? "success" : "danger")">
+                                                @appointment.Status
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <a asp-controller="AdminAppointments" asp-action="Index" class="btn btn-sm btn-outline-primary">Tümünü Gör</a>
+                }
+                else
+                {
+                    <p class="text-muted">Henüz randevu bulunmamaktadır.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

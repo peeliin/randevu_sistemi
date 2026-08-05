@@ -1,0 +1,90 @@
+@model List<store.Models.Appointment>
+@{
+    ViewData["Title"] = "Randevular";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-calendar-check"></i> Randevular</h2>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Yeni Randevu
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5 class="mb-0">Randevu Listesi</h5>
+            </div>
+            <div class="col-md-6">
+                <form method="get" class="d-flex gap-2">
+                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">Tüm Durumlar</option>
+                        <option value="Pending" selected="@(ViewBag.StatusFilter == "Pending")">Beklemede</option>
+                        <option value="Confirmed" selected="@(ViewBag.StatusFilter == "Confirmed")">Onaylandı</option>
+                        <option value="Completed" selected="@(ViewBag.StatusFilter == "Completed")">Tamamlandı</option>
+                        <option value="Cancelled" selected="@(ViewBag.StatusFilter == "Cancelled")">İptal Edildi</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Müşteri</th>
+                            <th>Servis</th>
+                            <th>Personel</th>
+                            <th>Tarih/Saat</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Customer?.FullName</td>
+                                <td>@item.Service?.Name</td>
+                                <td>@(item.Staff?.FullName ?? "Atanmadı")</td>
+                                <td>@item.AppointmentDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>
+                                    <span class="badge bg-@(item.Status == store.Models.AppointmentStatus.Pending ? "warning" : 
+                                                          item.Status == store.Models.AppointmentStatus.Confirmed ? "info" : 
+                                                          item.Status == store.Models.AppointmentStatus.Completed ? "success" : "danger")">
+                                        @item.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info" title="Detay">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary" title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger" title="Sil">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Henüz randevu bulunmamaktadır.
+            </div>
+        }
+    </div>
+</div>
+

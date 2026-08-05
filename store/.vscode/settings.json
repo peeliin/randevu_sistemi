@@ -1,0 +1,12 @@
+{
+  "css.lint.unknownProperties": "ignore",
+  "css.lint.unknownVendorSpecificProperties": "ignore",
+  "css.lint.validProperties": "ignore",
+  "css.lint.unknownAtRules": "ignore",
+  "css.lint.duplicateProperties": "warning",
+  "css.validate": false,
+  "css.customData": [],
+  "css.lint.unknownVendorSpecificPseudoElements": "ignore",
+  "css.lint.unknownPseudoElements": "ignore"
+}
+
