@@ -5,15 +5,12 @@ Bu proje, güzellik merkezleri için geliştirilmiş kapsamlı bir randevu yöne
 ## 🚀 Özellikler
 
 * **Kullanıcı Uygulaması:** Müşterilerin uygun saatleri görüp randevu oluşturabilmesi.
-* **Yönetim Paneli:** İşletme sahibinin randevuları onaylaması, iptal etmesi ve takvimi görüntülemesi.
-* **API Entegrasyonu:** Mobil ve web platformlarının eşzamanlı ve sorunsuz haberleşmesi.
+* **Yönetim Paneli:** İşletme sahibinin randevuları onaylaması, iptal etmesi ve takvimi görüntülemesi.Farklı alanlarda eleman alınması-çıkarılması durumunda kolayca eklenip çıkarılması.
 
 ## 🛠️ Kullanılan Teknolojiler
 
 * **Backend / Web Panel:** ASP.NET MVC
 * **Veritabanı:** SQL Server 
-* **API:** RESTful API mimarisi
-
 
 ## 💻 Kurulum (Nasıl Çalıştırılır?)
 
